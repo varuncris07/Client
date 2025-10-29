@@ -12,16 +12,28 @@ function Home() {
     setUrl('');
     try {
       const tag = method.toLowerCase() + '_success';
+      const baseUrl = window.location.origin;
       const r = await fetch('/api/payments/intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, tag }),
+        body: JSON.stringify({ 
+          amount, 
+          tag,
+          success_url: `${baseUrl}/success`,
+          failed_url: `${baseUrl}/failed`,
+          closed_url: `${baseUrl}/closed`
+        }),
       });
-      console.log('r', r);
+      console.log('Response status:', r.status);
       const j = await r.json();
+      console.log('Response data:', j);
       if (!r.ok) throw new Error(j.error || String(r.status));
       const redirectUrl = j.embed_url;
-      if (!redirectUrl) throw new Error('No redirect URL returned by API');
+      if (!redirectUrl) {
+        console.error('API response missing embed_url:', j);
+        throw new Error('No redirect URL returned by API');
+      }
+      console.log('Redirecting to:', redirectUrl);
       setUrl(redirectUrl);
       window.location.href = redirectUrl;
     } catch (err) {
