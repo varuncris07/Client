@@ -10,21 +10,43 @@ function Home() {
     e.preventDefault();
     setLoading(true);
     setUrl('');
+
     try {
+      const baseUrl = window.location.origin;
       const tag = method.toLowerCase() + '_success';
+
       const r = await fetch('/api/payments/intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, tag }),
+        body: JSON.stringify({
+          amount,
+          tag,
+          success_url: `${baseUrl}/success`,
+          failed_url: `${baseUrl}/failed`,
+          closed_url: `${baseUrl}/closed`,
+        }),
       });
-      console.log('r', r);
+
+      console.log('Response status:', r.status);
       const j = await r.json();
+      console.log('Response data:', j);
+
       if (!r.ok) throw new Error(j.error || String(r.status));
-      const redirectUrl = j.embed_url;
-      if (!redirectUrl) throw new Error('No redirect URL returned by API');
+
+      // Be liberal in what we accept back from the API
+      const redirectUrl = j.embed_url || j.pay_url || j.payment_url;
+      if (!redirectUrl) {
+        console.error('API response missing redirect URL field:', j);
+        throw new Error('No redirect URL returned by API');
+      }
+
+      console.log('Redirecting to:', redirectUrl);
       setUrl(redirectUrl);
-      window.location.href = redirectUrl;
+
+      // open new tab (avoids history issues); change to window.location.href if you prefer same-tab
+      window.open(redirectUrl, '_blank', 'noopener,noreferrer');
     } catch (err) {
+      console.error('Create intent failed:', err);
       alert('Create intent failed: ' + err.message);
     } finally {
       setLoading(false);
@@ -57,9 +79,7 @@ function Home() {
         </label>
         <button type="submit" disabled={loading}>{loading ? 'Creating…' : 'Create Intent'}</button>
       </form>
-      {url ? (
-        <div id="url">URL: {url}</div>
-      ) : null}
+      {url ? <div id="url">URL: {url}</div> : null}
     </main>
   );
 }
