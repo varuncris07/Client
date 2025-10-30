@@ -1,0 +1,28 @@
+{
+  "PORT": 8080,
+  "VERIFY_SIGNATURE": false,
+  "HMAC_HEADER": "X-MH-Signature",
+  "HMAC_SECRET_FALLBACK": "oTPlFG4s.MAD3pEmeUTbqFRjJzASZzgVPwsY2FVzw",
+  "HMAC_ALGO": "sha256",
+
+  "MH_API_BASE": "https://web.moneyhash.io",
+  "MH_CREATE_INTENT_PATH": "/api/v1.4/external/payments/intent/",
+  "MH_REFUND_PATH": "/api/v1.4/payments/transactions/{trx_uuid}/refund/",
+
+  "MH_AUTH_MODE": "account_key",
+  "MH_ACCOUNT_KEY": "zDAWr6iF.l2BSWDL1tDAI9t66J2iyX3visb927U2I",
+  "MH_ORG_SECRET": "oTPlFG4s.MAD3pEmeUTbqFRjJzASZzgVPwsY2FVzw",
+  "MH_ACCOUNT_ID": "gQnaK3Z",
+
+  "MH_FLOW_ID": "jZB0mLV",
+  "MH_PARTNER_CODE": "LA08",
+  "MH_CURRENCY": "SAR",
+  "MH_LIVE": false,
+
+  "MH_WEBHOOK_URL": "https://beatrice-foliiferous-subcorymbosely.ngrok-free.dev/webhook",
+  "MH_SUCCESS_URL": "http://localhost:3000/success.html",
+  "MH_FAILED_URL": "http://localhost:3000/failed.html",
+  "MH_CLOSED_URL": "http://localhost:3000/closed.html",
+
+  "MH_TRX_ID_FOR_REFUND": ""
+}
